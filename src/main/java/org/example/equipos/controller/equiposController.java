@@ -1,7 +1,7 @@
 package org.example.equipos.controller;
 
 import org.example.equipos.model.Equipo;
-import org.example.equipos.service.equiposService;
+import org.example.equipos.service.EquipoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,16 @@ import java.util.Optional;
 @RequestMapping("/equipos")
 public class equiposController {
     @Autowired
-    private equiposService equipoService;
+    private EquipoService equipoService;
 
     @GetMapping("")
-    public List<Equipo> getAllEquipos() {
-        return equipoService.getAllEquipos();
+    public ResponseEntity<?> getAllEquipos() {
+
+        try {
+            return new ResponseEntity<>(equipoService.getAllEquipos(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Equipos no encontrados", HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/{id}")
@@ -30,7 +35,7 @@ public class equiposController {
 
             return new ResponseEntity<>(equipo, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new ErrorResponse("Equipo no encontrado", 404), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Equipo no encontrado", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -52,24 +57,20 @@ public class equiposController {
 
             return new ResponseEntity<>(updatedEquipo, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new ErrorResponse("Equipo no encontrado", 404), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Equipo no encontrado", HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEquipo(@PathVariable Long id) {
-        boolean deleted = equipoService.deleteEquipo(id);
-        return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
-                : new ResponseEntity<>(new ErrorResponse("Equipo no encontrado", 404), HttpStatus.NOT_FOUND);
-    }
-
-    static class ErrorResponse {
-        private String mensaje;
-        private int codigo;
-
-        public ErrorResponse(String mensaje, int codigo) {
-            this.mensaje = mensaje;
-            this.codigo = codigo;
+        boolean deleted = false;
+        String error= "";
+        try {
+            deleted = equipoService.deleteEquipo(id);
+        } catch (Exception e) {
+            error = e.getMessage();
         }
+        return deleted ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+                : new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

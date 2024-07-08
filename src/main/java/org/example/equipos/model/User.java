@@ -10,12 +10,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Entity
-public class Equipo {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
-    private String liga;
-    private String pais;
+    private String username;
+    private String password;
 }

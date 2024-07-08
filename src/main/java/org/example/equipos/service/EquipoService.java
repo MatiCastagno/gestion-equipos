@@ -9,13 +9,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class equiposService {
+public class EquipoService {
 
     @Autowired
-    private EquipoRepository equipoRepository;
+    public EquipoRepository equipoRepository;
 
-    public List<Equipo> getAllEquipos() {
-        return equipoRepository.findAll();
+    public List<Equipo> getAllEquipos() throws Exception {
+
+        return  equipoRepository.findAll();
     }
 
     public Optional<Equipo> getEquipoById(Long id) {
@@ -39,9 +40,12 @@ public class equiposService {
         });
     }
 
-    public boolean deleteEquipo(Long id) {
-        return equipoRepository.findById(id).map(equipo -> {
-            equipoRepository.delete(equipo);
+    public boolean deleteEquipo(Long id) throws Exception {
+
+        Optional<Equipo> equipo = equipoRepository.findById(id);
+
+        return equipo.map(e -> {
+            equipoRepository.delete(e);
             return true;
         }).orElse(false);
     }
