@@ -1,9 +1,6 @@
 package org.example.equipos.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,8 @@ import lombok.NoArgsConstructor;
 public class Equipo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "equipo_seq")
+    @SequenceGenerator(name = "equipo_seq", sequenceName = "equipo_sequence", allocationSize = 1)
     private Long id;
     private String nombre;
     private String liga;

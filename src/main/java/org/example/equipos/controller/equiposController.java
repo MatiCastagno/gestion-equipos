@@ -42,13 +42,14 @@ public class equiposController {
             @ApiResponse(responseCode = "404", description = "No se encontro el equipo")
     })
     public ResponseEntity<?> getEquipoById(@PathVariable Long id) {
-        Optional<?> equipo = equipoService.getEquipoById(id);
+        Optional<Equipo> equipo = equipoService.getEquipoById(id);
 
+        System.out.println("equipo: " + equipo.get().getNombre());
         if (equipo.isEmpty()){
 
-            return new ResponseEntity<>(equipo, HttpStatus.OK);
-        } else {
             return new ResponseEntity<>("Equipo no encontrado", HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(equipo, HttpStatus.OK);
         }
     }
 
@@ -58,8 +59,15 @@ public class equiposController {
             @ApiResponse(responseCode = "200", description = "Operación exitosa"),
             @ApiResponse(responseCode = "404", description = "No se encontro el equipo")
     })
-    public List<Equipo> searchEquiposByNombre(@RequestParam String nombre) {
-        return equipoService.buscarEquiposByNombre(nombre);
+    public ResponseEntity<?> searchEquiposByNombre(@RequestParam String nombre) {
+
+        List<Equipo> equipos = equipoService.buscarEquiposByNombre(nombre);
+
+        if(equipos.isEmpty()){
+            return new ResponseEntity<>("Equipos no encontrados", HttpStatus.NOT_FOUND);
+        }else {
+            return new ResponseEntity<>(equipos, HttpStatus.OK);
+        }
     }
 
     @PostMapping
@@ -68,8 +76,13 @@ public class equiposController {
             @ApiResponse(responseCode = "200", description = "Operación exitosa"),
             @ApiResponse(responseCode = "404", description = "No se pudo crear correctamente el equipo")
     })
-    public ResponseEntity<Equipo> crearEquipo(@RequestBody Equipo equipo) {
-        return new ResponseEntity<Equipo>(equipoService.crearEquipo(equipo), HttpStatus.CREATED);
+    public ResponseEntity<?> crearEquipo(@RequestBody Equipo equipo) {
+        Equipo newEquipo = equipoService.crearEquipo(equipo);
+        if (newEquipo== null){
+            return new ResponseEntity<>("La solicitud es invalida", HttpStatus.BAD_REQUEST);
+        }else{
+            return new ResponseEntity<Equipo>(equipoService.crearEquipo(equipo), HttpStatus.CREATED);
+        }
     }
 
     @PutMapping("/{id}")
@@ -83,9 +96,10 @@ public class equiposController {
 
         if (updatedEquipo.isEmpty()){
 
-            return new ResponseEntity<>(updatedEquipo, HttpStatus.OK);
-        } else {
             return new ResponseEntity<>("Equipo no encontrado", HttpStatus.NOT_FOUND);
+        } else {
+
+            return new ResponseEntity<>(updatedEquipo, HttpStatus.OK);
         }
     }
 

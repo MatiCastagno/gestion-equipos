@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                 .formLogin(formLogin -> formLogin.disable())
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.headers().frameOptions().disable();
 
         return httpSecurity.build();
     }
