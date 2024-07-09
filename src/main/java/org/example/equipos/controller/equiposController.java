@@ -1,5 +1,8 @@
 package org.example.equipos.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.equipos.model.Equipo;
 import org.example.equipos.service.EquipoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,11 @@ public class equiposController {
     private EquipoService equipoService;
 
     @GetMapping("")
+    @Operation(summary = "Obtener todos los equipos")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se encontraron equipos")
+    })
     public ResponseEntity<?> getAllEquipos() {
 
         try {
@@ -28,6 +36,11 @@ public class equiposController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener un equipo por Id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se encontro el equipo")
+    })
     public ResponseEntity<?> getEquipoById(@PathVariable Long id) {
         Optional<?> equipo = equipoService.getEquipoById(id);
 
@@ -40,16 +53,31 @@ public class equiposController {
     }
 
     @GetMapping("/buscar")
+    @Operation(summary = "Obtener equipo por nombre")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se encontro el equipo")
+    })
     public List<Equipo> searchEquiposByNombre(@RequestParam String nombre) {
         return equipoService.buscarEquiposByNombre(nombre);
     }
 
     @PostMapping
+    @Operation(summary = "Crear Equipo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se pudo crear correctamente el equipo")
+    })
     public ResponseEntity<Equipo> crearEquipo(@RequestBody Equipo equipo) {
         return new ResponseEntity<Equipo>(equipoService.crearEquipo(equipo), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
+    @Operation(summary = "Modificar equipo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se encontro equipo")
+    })
     public ResponseEntity<?> updateEquipo(@PathVariable Long id, @RequestBody Equipo equipoDetails) {
         Optional<Equipo> updatedEquipo = equipoService.modicarEquipo(id, equipoDetails);
 
@@ -62,6 +90,11 @@ public class equiposController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Borrar equipo")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operación exitosa"),
+            @ApiResponse(responseCode = "404", description = "No se encontro el equipo")
+    })
     public ResponseEntity<?> deleteEquipo(@PathVariable Long id) {
         boolean deleted = false;
         String error= "";

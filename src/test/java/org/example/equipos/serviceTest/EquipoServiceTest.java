@@ -44,7 +44,12 @@ class EquipoServiceTest {
 
         when(equipoRepository.findAll()).thenReturn(equipos);
 
-        List<Equipo> result = equipoService.getAllEquipos();
+        List<Equipo> result = null;
+        try {
+            result = equipoService.getAllEquipos();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         assertEquals(5, result.size());
         assertEquals(equipos.get(0), result.get(0));
         assertEquals(equipos.get(1), result.get(1));
@@ -96,7 +101,12 @@ class EquipoServiceTest {
 
         when(equipoRepository.findById(1L)).thenReturn(Optional.of(equipos.get(0)));
 
-        boolean result = equipoService.deleteEquipo(1L);
+        boolean result = false;
+        try {
+            result = equipoService.deleteEquipo(1L);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
         assertTrue(result);
     }
 }

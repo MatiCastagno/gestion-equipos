@@ -1,11 +1,11 @@
 package org.example.equipos.repository;
 
-import org.example.equipos.model.User;
+import org.example.equipos.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UsersRepository extends JpaRepository<Users, Long> {
 
-    User findByUsername(String username);
+    Users findByUsername(String username);
 }
